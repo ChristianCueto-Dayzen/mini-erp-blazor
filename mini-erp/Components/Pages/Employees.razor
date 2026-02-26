@@ -1,11 +1,54 @@
 ﻿@page "/employees"
 
 <PageTitle>Employees</PageTitle>
+<div>
 
-<h3>Employees</h3>
+    <h3>@StringUtilities.TransformToTitleCase("Employees")</h3>
 
-<p>This is a page for employees management</p>
+    <p>This is a page for employees management</p>
+
+    @foreach (var employee in employees)
+    {
+        <div class="basic-card">
+            <p>Name: @employee.Name, Position: @employee.Position, Salary: $@employee.Salary, Department: @employee.Department</p>
+        </div>
+    }
+
+
+</div>
+
+
+    
+<button @onclick=@AddEmployee>New</button>
+
+<button @onclick=@DeleteEmployee>Delete</button>
+
 
 @code {
 
+    List<Employee>? employees { get; set; } 
+
+    protected override async Task OnInitializedAsync()
+    {
+        employees = GetEmployee();
+    }
+
+    List<Employee> GetEmployee()
+    {
+        return new List<Employee>()
+        {
+            new Employee { Name = "John Doe", Position = "Manager", Salary = 100f, Department = "Sales" },
+            new Employee { Name = "Jane Smith", Position = "Developer", Salary = 50f, Department = "I+D" },
+            new Employee { Name = "Emily Johnson", Position = "Designer", Salary = 10f, Department = "Marketing" }
+        };
+    }
+
+    void AddEmployee()
+    {
+        // Logic to add a new employee
+    }
+    void DeleteEmployee()
+    {
+        // Logic to delete an employee
+    }
 }
