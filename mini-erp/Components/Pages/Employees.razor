@@ -1,16 +1,32 @@
 ﻿@page "/employees"
+@rendermode InteractiveServer
 
 <PageTitle>Employees</PageTitle>
 <div>
-
     <h3>@StringUtilities.TransformToTitleCase("Employees")</h3>
 
     <p>This is a page for employees management</p>
+    <br />
+
+    
+    <hr />
+    <p>Enter the employee information: </p>
+    <input type="text" @bind="empleado.Name" placeholder="Enter name" id="name" required /><br />
+    <input type="text" @bind="empleado.Position" placeholder="Enter Position" id="position" required/><br />
+    <input type="text" @bind="empleado.Salary" placeholder="Enter Salary" id="Salary" required/><br />
+    <input type="text" @bind="empleado.Department" placeholder="Enter Department" id="department" required/><br />
+
+    <button @onclick="AddEmployee">New</button>
+
+    <button @onclick="DeleteEmployee">Delete</button>
+    <hr />
+    <br />
+
 
     @foreach (var employee in employees)
     {
         <div class="basic-card">
-            <p>Name: @employee.Name, Position: @employee.Position, Salary: $@employee.Salary, Department: @employee.Department</p>
+            <p>Name: @employee.Name, Position: @employee.Position, Department: @employee.Department, Salary: $@employee.Salary</p>
         </div>
     }
 
@@ -18,19 +34,16 @@
 </div>
 
 
-    
-<button @onclick=@AddEmployee>New</button>
-
-<button @onclick=@DeleteEmployee>Delete</button>
-
-
 @code {
 
-    List<Employee>? employees { get; set; } 
+    private Employee? empleado { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    List<Employee> employees { get; set; } = new();
+
+    protected override void OnInitialized()
     {
         employees = GetEmployee();
+        Console.WriteLine("Employees page loaded");
     }
 
     List<Employee> GetEmployee()
@@ -43,12 +56,42 @@
         };
     }
 
-    void AddEmployee()
+    void ClearInputFields()
     {
-        // Logic to add a new employee
+        //Clean the input fields
+    }   
+
+    void Click()
+    {
+        Console.Write("Me han presionado!");
     }
+
+    void AddEmployee()
+    {   
+        Console.WriteLine("Nuevo empleado entrante!");
+
+        if (!String.IsNullOrEmpty(empleado.Name) && !String.IsNullOrEmpty(empleado.Position) && !String.IsNullOrEmpty(empleado.Department) && empleado.Salary >0)
+        {
+            employees.Add(new Employee
+            {
+                Name = empleado.Name,
+                Position = empleado.Position,
+                Salary = empleado.Salary,
+                Department = empleado.Department
+            });
+            empleado = new Employee();
+            ClearInputFields();
+            StateHasChanged();
+        }
+        else
+        {
+            // show an error message
+        }
+
+    }
+
     void DeleteEmployee()
     {
-        // Logic to delete an employee
+        // Implement delete functionality here using Name and Department as identifiers
     }
 }
