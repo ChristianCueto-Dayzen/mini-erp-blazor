@@ -8,33 +8,61 @@
     <p>This is a page for employees management</p>
     <br />
 
-    
-    <hr />
-    <p>Enter the employee information: </p>
-    <input type="text" @bind="empleado.Name" placeholder="Enter name" id="name" required /><br />
-    <input type="text" @bind="empleado.Position" placeholder="Enter Position" id="position" required/><br />
-    <input type="text" @bind="empleado.Salary" placeholder="Enter Salary" id="Salary" required/><br />
-    <input type="text" @bind="empleado.Department" placeholder="Enter Department" id="department" required/><br />
+    <input type="checkbox" @onchange="@(() => ShowDeleteButton = !ShowDeleteButton)" />
+    <span>
+        Show Delete Button
+    </span>
+    <br />
+    <button @onclick="ShowAddEmployee">New Employee</button>
 
-    <button @onclick="AddEmployee">New</button>
+</div>
 
-    <button @onclick="DeleteEmployee">Delete</button>
+@if (ShowForm)
+{
+    <div>
+        <hr />
+        <p>Enter the employee information: </p>
+        <input type="text" @bind="empleado.Name" placeholder="Enter name" id="name" required /><br />
+        <input type="text" @bind="empleado.Position" placeholder="Enter Position" id="position" required /><br />
+        <input type="text" @bind="empleado.Department" placeholder="Enter Department" id="department" required /><br />
+        <input type="text" @bind="empleado.Salary" placeholder="Enter Salary" id="Salary" required /><br />
+
+        <button @onclick="AddEmployee">New</button>
+        <button @onclick="CloseForm">Close</button>
+    </div>
     <hr />
+}
     <br />
 
-
+@if(employees is null)
+{
+    <p>Loading employees...</p>
+} 
+else if (employees.Count == 0)
+{
+    <p>No employees to show</p>
+}
+else
+{
+    <p>Employees List:</p>
     @foreach (var employee in employees)
     {
         <div class="basic-card">
             <p>Name: @employee.Name, Position: @employee.Position, Department: @employee.Department, Salary: $@employee.Salary</p>
+            
+            @if (ShowDeleteButton)
+            {
+                <button @onclick="() => DeleteEmployee(employee)">Delete</button>
+            }
         </div>
     }
-
-
-</div>
+}
 
 
 @code {
+
+    bool ShowForm = false;
+    bool ShowDeleteButton = false;
 
     private Employee? empleado { get; set; } = new();
 
@@ -56,15 +84,9 @@
         };
     }
 
-    void ClearInputFields()
-    {
-        //Clean the input fields
-    }   
+    void ShowAddEmployee(){ShowForm = true;}
+    void CloseForm(){ShowForm = false;}
 
-    void Click()
-    {
-        Console.Write("Me han presionado!");
-    }
 
     void AddEmployee()
     {   
@@ -80,18 +102,15 @@
                 Department = empleado.Department
             });
             empleado = new Employee();
-            ClearInputFields();
             StateHasChanged();
-        }
-        else
-        {
-            // show an error message
         }
 
     }
 
-    void DeleteEmployee()
+    void DeleteEmployee(Employee emp)
     {
-        // Implement delete functionality here using Name and Department as identifiers
+        employees.Remove(emp);
+        StateHasChanged();
+        
     }
 }
