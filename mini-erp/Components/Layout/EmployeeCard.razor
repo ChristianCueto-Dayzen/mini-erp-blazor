@@ -1,0 +1,63 @@
+﻿<EmployeeForm empleado="Empleado" OnAdd="AddEmployee"/>
+<input type="checkbox" @bind= "ShowDeleteButton" />
+<span>
+    Show Delete Button
+</span>
+<br />
+@if (employees is null)
+{
+    <p>Loading employees...</p>
+}
+else if (employees.Count == 0)
+{
+    <p>No employees to show</p>
+}
+else
+{
+    <p>Employees List:</p>
+    @foreach (var employee in employees)
+    {
+        <div class="basic-card">
+            <p>Name: @employee.Name, Position: @employee.Position, Department: @employee.Department, Salary: $@employee.Salary</p>
+
+            @if (ShowDeleteButton)
+            {
+                <button @onclick="() => DeleteEmployee(employee)">Delete</button>
+            }
+        </div>
+    }
+}
+
+
+@code {
+    bool ShowDeleteButton = false;
+
+    private Employee? Empleado { get; set; } = new();
+
+    [Parameter]
+    [EditorRequired]
+    public List<Employee>? employees { get; set; }
+
+    void DeleteEmployee(Employee emp)
+    {
+        employees!.Remove(emp);
+        StateHasChanged();
+    }
+
+    private void AddEmployee(Employee empleado)
+    {
+
+        if (!String.IsNullOrEmpty(empleado.Name) && !String.IsNullOrEmpty(empleado.Position) && !String.IsNullOrEmpty(empleado.Department) && empleado.Salary > 0)
+        {
+            employees!.Add(new Employee
+            {
+                Name = empleado.Name,
+                Position = empleado.Position,
+                Salary = empleado.Salary,
+                Department = empleado.Department
+            });
+            Empleado = new Employee();
+        }
+
+    }
+}

@@ -1,0 +1,30 @@
+﻿
+<button @onclick="ShowAddEmployee">New Employee</button>
+<hr />
+@if (ShowForm)
+{
+    <div @key="empleado">
+        <p>Enter the employee information: </p>
+        <input type="text" @bind="empleado.Name" placeholder="Enter name" id="name" required /><br />
+        <input type="text" @bind="empleado.Position" placeholder="Enter Position" id="position" required /><br />
+        <input type="text" @bind="empleado.Department" placeholder="Enter Department" id="department" required /><br />
+        <input type="text" @bind="empleado.Salary" placeholder="Enter Salary" id="salary" required /><br />
+
+        <button @onclick="@(() => OnAdd.InvokeAsync(empleado))">Add</button>
+        <button @onclick="CloseForm">Close</button>
+    </div>
+    <hr />
+}
+@code {
+    bool ShowForm = false;
+
+    [Parameter]
+    public Employee empleado { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<Employee> OnAdd { get; set; }
+
+    void ShowAddEmployee() { ShowForm = true; }
+    void CloseForm() { ShowForm = false; }
+
+}
