@@ -1,4 +1,5 @@
-﻿<EmployeeForm empleado="Empleado" OnAdd="AddEmployee"/>
+﻿@inject IRepository repositorio
+<EmployeeForm empleado="Empleado" OnAdd="AddEmployee"/>
 <input type="checkbox" @bind= "ShowDeleteButton" />
 <span>
     Show Delete Button
@@ -22,7 +23,7 @@ else
 
             @if (ShowDeleteButton)
             {
-                <button @onclick="() => DeleteEmployee(employee)">Delete</button>
+                <button @onclick="() => repositorio.DeleteEmployee(employee)">Delete</button>
             }
         </div>
     }
@@ -38,26 +39,12 @@ else
     [EditorRequired]
     public List<Employee>? employees { get; set; }
 
-    void DeleteEmployee(Employee emp)
-    {
-        employees!.Remove(emp);
-        StateHasChanged();
-    }
-
     private void AddEmployee(Employee empleado)
     {
-
         if (!String.IsNullOrEmpty(empleado.Name) && !String.IsNullOrEmpty(empleado.Position) && !String.IsNullOrEmpty(empleado.Department) && empleado.Salary > 0)
         {
-            employees!.Add(new Employee
-            {
-                Name = empleado.Name,
-                Position = empleado.Position,
-                Salary = empleado.Salary,
-                Department = empleado.Department
-            });
+            repositorio.AddEmployee(empleado);
             Empleado = new Employee();
         }
-
     }
 }

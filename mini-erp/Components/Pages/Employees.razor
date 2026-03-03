@@ -1,4 +1,6 @@
 ﻿@page "/employees"
+@inject IRepository repositorio
+
 @rendermode InteractiveServer
 
 <PageTitle>Employees</PageTitle>
@@ -18,17 +20,7 @@
 
     protected override void OnInitialized()
     {
-        employees = GetEmployees();
-    }
-
-    List<Employee> GetEmployees()
-    {
-        return new List<Employee>()
-        {
-            new Employee { Name = "John Doe", Position = "Manager", Salary = 100f, Department = "Sales" },
-            new Employee { Name = "Jane Smith", Position = "Developer", Salary = 50f, Department = "I+D" },
-            new Employee { Name = "Emily Johnson", Position = "Designer", Salary = 10f, Department = "Marketing" }
-        };
+        employees = repositorio.GetEmployees();
     }
    
 }

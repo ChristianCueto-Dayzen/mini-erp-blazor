@@ -1,10 +1,12 @@
 using mini_erp.Components;
+using mini_erp.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
@@ -25,3 +27,8 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+void ConfigureServices(IServiceCollection services)
+{
+    services.AddSingleton<IRepository, EmployeeService>();
+}
