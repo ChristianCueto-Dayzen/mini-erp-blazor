@@ -1,0 +1,34 @@
+﻿@page "/employees"
+@rendermode InteractiveServer
+
+<PageTitle>Employees</PageTitle>
+<div>
+    <h3>@StringUtilities.TransformToTitleCase("Employees")</h3>
+
+    <p>This is a page for employees management</p>
+    <br />
+
+    <EmployeeCard employees="employees"/>
+
+</div>
+
+
+@code {
+    private List<Employee>? employees { get; set; }
+
+    protected override void OnInitialized()
+    {
+        employees = GetEmployees();
+    }
+
+    List<Employee> GetEmployees()
+    {
+        return new List<Employee>()
+        {
+            new Employee { Name = "John Doe", Position = "Manager", Salary = 100f, Department = "Sales" },
+            new Employee { Name = "Jane Smith", Position = "Developer", Salary = 50f, Department = "I+D" },
+            new Employee { Name = "Emily Johnson", Position = "Designer", Salary = 10f, Department = "Marketing" }
+        };
+    }
+   
+}
