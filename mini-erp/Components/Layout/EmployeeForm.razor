@@ -1,22 +1,56 @@
 ﻿
-<button @onclick="ShowAddEmployee">New Employee</button>
+<button @onclick="ShowForm">@ShowButton</button>
 <hr />
-@if (ShowForm)
+@if (showForm)
 {
-    <div @key="empleado">
-        <p>Enter the employee information: </p>
-        <input type="text" @bind="empleado.Name" placeholder="Enter name" id="name" required /><br />
-        <input type="text" @bind="empleado.Position" placeholder="Enter Position" id="position" required /><br />
-        <input type="text" @bind="empleado.Department" placeholder="Enter Department" id="department" required /><br />
-        <input type="text" @bind="empleado.Salary" placeholder="Enter Salary" id="salary" required /><br />
+    <div>
+        <p>Enter the new employee information: </p>
 
-        <button @onclick="@(() => OnAdd.InvokeAsync(empleado))">Add</button>
-        <button @onclick="CloseForm">Close</button>
+        <EditForm Model="empleado" OnValidSubmit="Add">
+            <DataAnnotationsValidator />
+            <div>
+                <label for="name"> Name:</label>
+                <div>
+                    <InputText @bind-Value="@empleado.Name" /> 
+                    <ValidationMessage For="@(() => empleado.Name)" />
+                </div>
+                <label for="position"> Position:</label>
+                <div>
+                    <InputText @bind-Value="@empleado.Position" />
+                    <ValidationMessage For="@(() => empleado.Position)" />
+                </div>
+                <label for="email"> Email:</label>
+                <div>
+                    <InputText @bind-Value="@empleado.Email" />
+                    <ValidationMessage For="@(() => empleado.Email)" />
+                </div>
+                <label for="salary"> Salary:</label>
+                <div>
+                    <InputNumber @bind-Value="@empleado.Salary" />
+                    <ValidationMessage For="@(() => empleado.Salary)" />
+                </div>
+            </div>
+            <br />
+            <button type="submit">  Add employee </button>
+
+        </EditForm>
+        <br /> 
+        
+
+
     </div>
     <hr />
 }
 @code {
-    bool ShowForm = false;
+    bool showForm = false;
+    void ShowForm() { showForm = !showForm; }
+
+    string ShowButton => showForm ? "Hide form" : "Add new employee";
+
+    public void Add()
+    {
+        OnAdd.InvokeAsync(empleado);
+    }
 
     [Parameter]
     public Employee empleado { get; set; } = null!;
@@ -24,7 +58,5 @@
     [Parameter]
     public EventCallback<Employee> OnAdd { get; set; }
 
-    void ShowAddEmployee() { ShowForm = true; }
-    void CloseForm() { ShowForm = false; }
-
+    
 }

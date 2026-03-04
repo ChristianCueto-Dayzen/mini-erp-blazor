@@ -8,9 +8,9 @@ namespace mini_erp.Repositories
     {
         private List<Employee> Employees = new List<Employee>()
             {
-                new Employee { Name = "John Doe", Position = "Manager", Salary = 100f, Department = "Sales" },
-                new Employee { Name = "Jane Smith", Position = "Developer", Salary = 50f, Department = "I+D" },
-                new Employee { Name = "Emily Johnson", Position = "Designer", Salary = 10f, Department = "Marketing" }
+                new Employee { Name = "John Doe", Position = "Manager", Salary = 100, Email = "jdoe@domain.com" },
+                new Employee { Name = "Jane Smith", Position = "Developer", Salary = 50, Email = "jsmith@domain.com" },
+                new Employee { Name = "Emily Johnson", Position = "Designer", Salary = 10, Email = "ejohnson@domain.com" }
             };
         public List<Employee> GetEmployees()
         {
@@ -28,7 +28,7 @@ namespace mini_erp.Repositories
                 Name = empleado.Name,
                 Position = empleado.Position,
                 Salary = empleado.Salary,
-                Department = empleado.Department
+                Email = empleado.Email
             });
         }
 

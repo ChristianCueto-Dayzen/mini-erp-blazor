@@ -1,6 +1,7 @@
 ﻿@inject IRepository repositorio
-<EmployeeForm empleado="Empleado" OnAdd="AddEmployee"/>
-<input type="checkbox" @bind= "ShowDeleteButton" />
+<EmployeeForm empleado="Empleado" OnAdd="AddEmployee" />
+
+<input type="checkbox" @bind="ShowDeleteButton" />
 <span>
     Show Delete Button
 </span>
@@ -19,7 +20,7 @@ else
     @foreach (var employee in employees)
     {
         <div class="basic-card">
-            <p>Name: @employee.Name, Position: @employee.Position, Department: @employee.Department, Salary: $@employee.Salary</p>
+            <p>Name: @employee.Name, Position: @employee.Position, Email: @employee.Email, Salary: $@employee.Salary</p>
 
             @if (ShowDeleteButton)
             {
@@ -41,10 +42,9 @@ else
 
     private void AddEmployee(Employee empleado)
     {
-        if (!String.IsNullOrEmpty(empleado.Name) && !String.IsNullOrEmpty(empleado.Position) && !String.IsNullOrEmpty(empleado.Department) && empleado.Salary > 0)
-        {
-            repositorio.AddEmployee(empleado);
-            Empleado = new Employee();
-        }
+
+        repositorio.AddEmployee(empleado);
+        Empleado = new Employee();
+
     }
 }
