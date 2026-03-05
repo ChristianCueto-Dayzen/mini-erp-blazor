@@ -1,15 +1,14 @@
 ﻿@page "/employees"
 @inject IRepository repositorio
-
+@attribute [StreamRendering]
 @rendermode InteractiveServer
+
+
 
 <PageTitle>Employees</PageTitle>
 <div>
     <h3>@StringUtilities.TransformToTitleCase("Employees")</h3>
-
     <p>This is a page for employees management</p>
-    <br />
-
     <EmployeeCard employees="employees"/>
 
 </div>
@@ -18,9 +17,14 @@
 @code {
     private List<Employee>? employees { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        employees = repositorio.GetEmployees();
+        if (firstRender)
+        {
+            await Task.Delay(800);
+            employees = repositorio.GetEmployees();
+            StateHasChanged();
+        }
     }
    
 }

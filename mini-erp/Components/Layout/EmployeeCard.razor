@@ -1,37 +1,71 @@
 ﻿@inject IRepository repositorio
 <EmployeeForm empleado="Empleado" OnAdd="AddEmployee" />
 
-<input type="checkbox" @bind="ShowDeleteButton" />
+<br />
+
+<input type="checkbox" @bind="ShowDeleteButton" class="form-check-input" />
+
 <span>
     Show Delete Button
 </span>
 <br />
-@if (employees is null)
-{
-    <p>Loading employees...</p>
-}
-else if (employees.Count == 0)
-{
-    <p>No employees to show</p>
-}
-else
-{
-    <p>Employees List:</p>
-    @foreach (var employee in employees)
-    {
-        <div class="basic-card">
-            <p>Name: @employee.Name, Position: @employee.Position, Email: @employee.Email, Salary: $@employee.Salary</p>
 
-            @if (ShowDeleteButton)
+<table class="table table-striped table-hover table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Email</th>
+            <th>Salary</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (employees is null)
+        {
+            <tr>
+                <td colspan="5">Loading employees...</td>
+            </tr>
+        }
+        else if (employees.Count == 0)
+        {
+            <tr>
+                <td colspan="5">No employees found.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var employee in employees)
             {
-                <button @onclick="() => repositorio.DeleteEmployee(employee)">Delete</button>
+                <tr>
+                    <td>@employee.Name</td>
+                    <td>@employee.Position</td>
+                    <td>@employee.Email</td>
+                    <td class="text-end">$@employee.Salary</td>
+                    <td class="text-center">
+                        @if (ShowDeleteButton)
+                        {
+                            <button class="btn btn-danger btn-sm"
+                                    @onclick="() => repositorio.DeleteEmployee(employee)">
+                                Delete
+                            </button>
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </td>
+                </tr>
             }
-        </div>
-    }
-}
+        }
+
+    </tbody>
+</table>
+
 
 
 @code {
+
     bool ShowDeleteButton = false;
 
     private Employee? Empleado { get; set; } = new();
@@ -42,7 +76,6 @@ else
 
     private void AddEmployee(Employee empleado)
     {
-
         repositorio.AddEmployee(empleado);
         Empleado = new Employee();
 

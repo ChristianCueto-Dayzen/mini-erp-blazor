@@ -1,46 +1,44 @@
-﻿
-<button @onclick="ShowForm">@ShowButton</button>
-<hr />
+﻿<button class="btn btn-primary" @onclick="ShowForm">@ShowButton</button>
+<br />
+
 @if (showForm)
 {
-    <div>
+    <br />
+    <div class="form-control">
         <p>Enter the new employee information: </p>
-
-        <EditForm Model="empleado" OnValidSubmit="Add">
+        <EditForm Model="empleado" OnValidSubmit="Add" style="flex-direction:column-reverse">
             <DataAnnotationsValidator />
-            <div>
-                <label for="name"> Name:</label>
-                <div>
-                    <InputText @bind-Value="@empleado.Name" /> 
+            <div class="row" style="max-width:700px;">
+                <div class="col-md-6">
+                    <label for="name"> Name: </label>
+                    <InputText class="form-control" @bind-Value="@empleado.Name" />
                     <ValidationMessage For="@(() => empleado.Name)" />
                 </div>
-                <label for="position"> Position:</label>
-                <div>
-                    <InputText @bind-Value="@empleado.Position" />
+                <div class="col-md-6">
+                    <label for="position"> Position: </label>
+                    <InputText class="form-control" @bind-Value="@empleado.Position" />
                     <ValidationMessage For="@(() => empleado.Position)" />
+                    
                 </div>
-                <label for="email"> Email:</label>
-                <div>
-                    <InputText @bind-Value="@empleado.Email" />
+                <div class="col-md-6">
+                    <label for="email"> Email: </label>
+                    <InputText class="form-control" @bind-Value="@empleado.Email" />
                     <ValidationMessage For="@(() => empleado.Email)" />
                 </div>
-                <label for="salary"> Salary:</label>
-                <div>
-                    <InputNumber @bind-Value="@empleado.Salary" />
+                <div class="col-md-6">
+                    <label for="salary"> Salary: </label>
+                    <InputNumber class="form-control" @bind-Value="@empleado.Salary" />
                     <ValidationMessage For="@(() => empleado.Salary)" />
                 </div>
             </div>
             <br />
-            <button type="submit">  Add employee </button>
+            <button class ="btn btn-success" type="submit">  Add employee </button>
 
         </EditForm>
-        <br /> 
         
-
-
     </div>
-    <hr />
 }
+
 @code {
     bool showForm = false;
     void ShowForm() { showForm = !showForm; }
@@ -58,5 +56,5 @@
     [Parameter]
     public EventCallback<Employee> OnAdd { get; set; }
 
-    
+
 }
