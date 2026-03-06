@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿// Este código define la clase EmployeeService, encargada de manejar las operaciones relacionadas con los empleados.
+// Implementa la interfaz IRepository, lo que permite una separación clara entre la definición de las operaciones y su implementación concreta.
+
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using mini_erp.Components.Pages;
 using mini_erp.Entities;
 

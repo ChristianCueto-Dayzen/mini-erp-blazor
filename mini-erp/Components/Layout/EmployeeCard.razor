@@ -1,10 +1,12 @@
-﻿@inject IRepository repositorio
-<EmployeeForm empleado="Empleado" OnAdd="AddEmployee" />
+﻿<!-- Employee Card: Muestra en forma de tabla los datos obtenidos en la lista de empleados
+    proporcionada por el padre.
+-->
+
+@inject IRepository repository
+<EmployeeForm empleado="employee" OnAdd="AddEmployee" />
 
 <br />
-
 <input type="checkbox" @bind="ShowDeleteButton" class="form-check-input" />
-
 <span>
     Show Delete Button
 </span>
@@ -13,11 +15,11 @@
 <table class="table table-striped table-hover table-bordered">
     <thead class="table-dark">
         <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Email</th>
-            <th>Salary</th>
-            <th>Actions</th>
+            <th class="text-center">Name</th>
+            <th class="text-center">Position</th>
+            <th class="text-center">Email</th>
+            <th class="text-center">Salary</th>
+            <th class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -46,38 +48,33 @@
                         @if (ShowDeleteButton)
                         {
                             <button class="btn btn-danger btn-sm"
-                                    @onclick="() => repositorio.DeleteEmployee(employee)">
+                                    @onclick="() => repository.DeleteEmployee(employee)">
                                 Delete
                             </button>
                         }
                         else
                         {
-                            <span class="text-muted">-</span>
+                            <span>-</span>
                         }
                     </td>
                 </tr>
             }
         }
-
     </tbody>
 </table>
-
-
 
 @code {
 
     bool ShowDeleteButton = false;
-
-    private Employee? Empleado { get; set; } = new();
+    private Employee? employee { get; set; } = new();
 
     [Parameter]
     [EditorRequired]
     public List<Employee>? employees { get; set; }
 
-    private void AddEmployee(Employee empleado)
+    private void AddEmployee(Employee emp)
     {
-        repositorio.AddEmployee(empleado);
-        Empleado = new Employee();
-
+        repository.AddEmployee(emp);
+        employee = new Employee();
     }
 }

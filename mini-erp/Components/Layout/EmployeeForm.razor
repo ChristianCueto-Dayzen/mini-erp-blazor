@@ -1,14 +1,24 @@
-﻿<button class="btn btn-primary" @onclick="ShowForm">@ShowButton</button>
+﻿<!--
+    Este componente maneja la lógica del formulario para agregar un nuevo empleado.
+    El formulario se oculta o se muestra al hacer clic en "Add New Employee".
+    Al enviar el formulario, se invoca el método "Add" que a su vez llama al callback "OnAdd"
+    para notificar al componente padre (EmployeeCard) que se ha agregado un nuevo empleado.
+
+    Posible mejora: Emplear un EventCallback para manejar la actualización de la lista de empleados
+    aprovechando el Irepository.
+-->
+
+<button class="btn btn-primary" @onclick="ShowForm">@ShowButton</button>
 <br />
 
 @if (showForm)
 {
     <br />
-    <div class="form-control">
+    <div class="form-control border-3" style="background-color: whitesmoke">
         <p>Enter the new employee information: </p>
         <EditForm Model="empleado" OnValidSubmit="Add" style="flex-direction:column-reverse">
             <DataAnnotationsValidator />
-            <div class="row" style="max-width:700px;">
+            <div class="row">
                 <div class="col-md-6">
                     <label for="name"> Name: </label>
                     <InputText class="form-control" @bind-Value="@empleado.Name" />
@@ -16,7 +26,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="position"> Position: </label>
-                    <InputText class="form-control" @bind-Value="@empleado.Position" />
+                    <InputText class="form-control" @bind-Value="@empleado.Position"/>
                     <ValidationMessage For="@(() => empleado.Position)" />
                     
                 </div>

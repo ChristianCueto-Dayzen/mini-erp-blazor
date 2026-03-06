@@ -1,18 +1,16 @@
-﻿@page "/employees"
+﻿<!-- Página de Empleados: Solicita los componentes necesarios para mostrárselos al usuario-->
+@page "/employees"
 @inject IRepository repositorio
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 
-
-
 <PageTitle>Employees</PageTitle>
 <div>
-    <h3>@StringUtilities.TransformToTitleCase("Employees")</h3>
-    <p>This is a page for employees management</p>
+    <h2 class="text-center text-info-emphasis text-primary text-start">Employees</h2>
+    <p class="text-body">This is a page for employees management</p>
+    
     <EmployeeCard employees="employees"/>
-
 </div>
-
 
 @code {
     private List<Employee>? employees { get; set; }
@@ -21,10 +19,9 @@
     {
         if (firstRender)
         {
-            await Task.Delay(800);
+            await Task.Delay(2000);
             employees = repositorio.GetEmployees();
             StateHasChanged();
         }
     }
-   
 }

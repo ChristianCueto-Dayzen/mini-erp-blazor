@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿// Este código define las propiedades de la clase Employee, un empleado en el sistema
+// Cada propiedad tiene validaciones para asegurar que los datos ingresados sean correctos y cumplan con ciertos formatos
+
+using Microsoft.AspNetCore.Authentication;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Metadata;
