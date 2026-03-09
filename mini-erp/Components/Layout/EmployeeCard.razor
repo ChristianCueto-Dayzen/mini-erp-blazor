@@ -111,11 +111,14 @@
 
     protected async Task Clear()
     {
-        IsLoading = true;
-        searchInput = "";
-        await Task.Delay(2000);
-        await Search();
-        IsLoading = false;
+        if(!string.IsNullOrWhiteSpace(searchInput))
+        {
+            IsLoading = false;
+            searchInput = "";
+            await Task.Delay(2000);
+            await Search();
+            IsLoading = false;
+        }
     }
 
     protected async Task DeleteEmployeeAsync(Employee employee)
