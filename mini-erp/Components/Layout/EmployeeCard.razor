@@ -1,9 +1,16 @@
 ﻿<!-- Employee Card: Muestra en forma de tabla los datos obtenidos en la lista de empleados
-    proporcionada por el padre.
+    proporcionada por el padre. Incluye un input para filtrar/buscar empleados.
 -->
-
 @inject IRepository repository
-<EmployeeForm empleado="employee" OnAdd="AddEmployee" />
+
+<EmployeeForm empleado="employee" OnAdd="AddEmployeeAsync" />
+
+<br />  
+<div class="row justify-content-end">
+    <input class="form-control" style="max-width: 300px; margin:0 8px" @bind="searchInput" @bind:after="Search"
+        @bind:event="oninput" placeholder="Search:"/>
+    <button class="btn btn-outline-primary" style="max-width: 80px" @onclick ="Clear">Clear</button>
+</div>
 
 <br />
 <input type="checkbox" @bind="ShowDeleteButton" class="form-check-input" />
@@ -11,7 +18,6 @@
     Show Delete Button
 </span>
 <br />
-
 <table class="table table-striped table-hover table-bordered">
     <thead class="table-dark">
         <tr>
@@ -24,6 +30,12 @@
     </thead>
     <tbody>
         @if (employees is null)
+        {
+            <tr>
+                <td colspan="5">Loading employees...</td>
+            </tr>
+        }
+        else if (IsLoading)
         {
             <tr>
                 <td colspan="5">Loading employees...</td>
@@ -48,7 +60,8 @@
                         @if (ShowDeleteButton)
                         {
                             <button class="btn btn-danger btn-sm"
-                                    @onclick="() => repository.DeleteEmployee(employee)">
+                                    disabled="@IsLoading"
+                                    @onclick="() => DeleteEmployeeAsync(employee)">
                                 Delete
                             </button>
                         }
@@ -58,7 +71,9 @@
                         }
                     </td>
                 </tr>
+
             }
+        }
         }
     </tbody>
 </table>
@@ -66,15 +81,55 @@
 @code {
 
     bool ShowDeleteButton = false;
-    private Employee? employee { get; set; } = new();
+    bool IsLoading = false;
+    private Employee employee { get; set; } = new();
+    string searchInput = string.Empty;
 
     [Parameter]
     [EditorRequired]
     public List<Employee>? employees { get; set; }
 
-    private void AddEmployee(Employee emp)
+    protected async Task Search()
     {
-        repository.AddEmployee(emp);
+        IsLoading = true;
+        await Task.Delay(2000);
+
+        if (string.IsNullOrWhiteSpace(searchInput))
+        {
+            employees = repository.GetEmployees();
+        }
+        else
+        {
+            employees = repository.GetEmployees()
+                                  .Where(e => e.Name.Contains(searchInput, StringComparison.OrdinalIgnoreCase) ||
+                                              e.Position.Contains(searchInput, StringComparison.OrdinalIgnoreCase) ||
+                                              e.Email.Contains(searchInput, StringComparison.OrdinalIgnoreCase))
+                                  .ToList();
+        }
+        IsLoading = false;
+    }
+
+    protected async Task Clear()
+    {
+        IsLoading = true;
+        searchInput = "";
+        await Task.Delay(2000);
+        await Search();
+        IsLoading = false;
+    }
+
+    protected async Task DeleteEmployeeAsync(Employee employee)
+    {
+        IsLoading = true;
+        await Task.Delay(2000);
+        repository.DeleteEmployee(employee);
+        IsLoading = false;
+    }
+
+    private async Task AddEmployeeAsync()
+    {
+        await Task.Delay(2000);
+        repository.AddEmployee(employee);
         employee = new Employee();
     }
 }

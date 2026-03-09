@@ -1,10 +1,11 @@
 ﻿<!-- Página de Empleados: Solicita los componentes necesarios para mostrárselos al usuario-->
 @page "/employees"
-@inject IRepository repositorio
+@inject IRepository repository
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 
 <PageTitle>Employees</PageTitle>
+
 <div>
     <h2 class="text-center text-info-emphasis text-primary text-start">Employees</h2>
     <p class="text-body">This is a page for employees management</p>
@@ -20,7 +21,7 @@
         if (firstRender)
         {
             await Task.Delay(2000);
-            employees = repositorio.GetEmployees();
+            employees = repository.GetEmployees();
             StateHasChanged();
         }
     }

@@ -1,5 +1,6 @@
 ﻿// Este código define la clase EmployeeService, encargada de manejar las operaciones relacionadas con los empleados.
-// Implementa la interfaz IRepository, lo que permite una separación clara entre la definición de las operaciones y su implementación concreta.
+// Implementa la interfaz IRepository, lo que permite una separación entre la definición de las operaciones
+// y su implementación concreta.
 
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using mini_erp.Components.Pages;
@@ -15,7 +16,7 @@ namespace mini_erp.Repositories
                 new Employee { Name = "Jane Smith", Position = "Developer", Salary = 50, Email = "jsmith@domain.com" },
                 new Employee { Name = "Emily Johnson", Position = "Designer", Salary = 10, Email = "ejohnson@domain.com" }
             };
-        public List<Employee> GetEmployees()
+        public List<Employee> GetEmployees()        
         {
             return Employees;
         }
