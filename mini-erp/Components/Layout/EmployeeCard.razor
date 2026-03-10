@@ -5,14 +5,24 @@
 
 <EmployeeForm empleado="employee" OnAdd="AddEmployeeAsync" />
 
-<br />  
+<br />
 <div class="row justify-content-end">
-    <input class="form-control" style="max-width: 300px; margin:0 8px" @bind="searchInput" @bind:after="Search"
-        @bind:event="oninput" placeholder="Search:"/>
-    <button class="btn btn-outline-primary" style="max-width: 80px" @onclick ="Clear">Clear</button>
+    <input class="form-control" style="max-width: 300px; margin:0 4px" @bind="searchInput" @bind:event="oninput" @bind:after="Find" placeholder="Search:" />
+    @*<input class="form-control" style="max-width: 300px; margin:0 4px" @bind="searchInput" placeholder="Search:" />*@
+    <InputSelect class="form-select" style="max-width: 150px; margin:0 4px"
+        @bind-Value="searchOption" @bind-Value:after="Find">
+
+        <option class="text-opacity-25" value="">--Search by--</option>
+        <option value="Name">Name</option>
+        <option value="Position">Position</option>
+        <option value="Email">Email</option>
+    </InputSelect>
+
+    @* <button class="btn btn-outline-primary" style="max-width: 80px; margin: 0 4px" @onclick="Find">Find</button> *@
+    <button class="btn btn-outline-secondary" style="max-width: 80px" @onclick="Clear">Clear</button>
 </div>
 
-<br />
+
 <input type="checkbox" @bind="ShowDeleteButton" class="form-check-input" />
 <span>
     Show Delete Button
@@ -29,18 +39,13 @@
         </tr>
     </thead>
     <tbody>
-        @if (employees is null)
+        @if (employees is null || IsLoading)
         {
             <tr>
                 <td colspan="5">Loading employees...</td>
             </tr>
         }
-        else if (IsLoading)
-        {
-            <tr>
-                <td colspan="5">Loading employees...</td>
-            </tr>
-        }
+        
         else if (employees.Count == 0)
         {
             <tr>
@@ -74,14 +79,15 @@
 
             }
         }
-        }
+
     </tbody>
 </table>
 
 @code {
-
+    string searchOption = string.Empty;
     bool ShowDeleteButton = false;
     bool IsLoading = false;
+    bool IsShowingFilteredList = false;
     private Employee employee { get; set; } = new();
     string searchInput = string.Empty;
 
@@ -89,35 +95,33 @@
     [EditorRequired]
     public List<Employee>? employees { get; set; }
 
-    protected async Task Search()
-    {
-        IsLoading = true;
-        await Task.Delay(2000);
 
-        if (string.IsNullOrWhiteSpace(searchInput))
+
+    protected async Task Find()
+    {
+        if (!string.IsNullOrEmpty(searchOption) && !string.IsNullOrWhiteSpace(searchInput))
+        {
+            employees = repository.SearchEmployees(searchOption,searchInput.Trim());
+            StateHasChanged();
+            IsShowingFilteredList = true;
+        }
+        else if(IsShowingFilteredList)
         {
             employees = repository.GetEmployees();
+            IsShowingFilteredList = false;
         }
-        else
-        {
-            employees = repository.GetEmployees()
-                                  .Where(e => e.Name.Contains(searchInput, StringComparison.OrdinalIgnoreCase) ||
-                                              e.Position.Contains(searchInput, StringComparison.OrdinalIgnoreCase) ||
-                                              e.Email.Contains(searchInput, StringComparison.OrdinalIgnoreCase))
-                                  .ToList();
-        }
-        IsLoading = false;
     }
 
     protected async Task Clear()
     {
-        if(!string.IsNullOrWhiteSpace(searchInput))
+        if (!string.IsNullOrWhiteSpace(searchInput))
         {
-            IsLoading = false;
             searchInput = "";
-            await Task.Delay(2000);
-            await Search();
-            IsLoading = false;
+            searchOption = "";
+        }
+        if (IsShowingFilteredList)
+        {
+            await Find();
         }
     }
 

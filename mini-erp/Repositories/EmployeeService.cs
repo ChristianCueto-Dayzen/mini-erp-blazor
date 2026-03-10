@@ -2,8 +2,6 @@
 // Implementa la interfaz IRepository, lo que permite una separación entre la definición de las operaciones
 // y su implementación concreta.
 
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using mini_erp.Components.Pages;
 using mini_erp.Entities;
 
 namespace mini_erp.Repositories
@@ -12,18 +10,29 @@ namespace mini_erp.Repositories
     {
         private List<Employee> Employees = new List<Employee>()
             {
+                //Aqui se obtendrían los datos de la base de datos.
                 new Employee { Name = "John Doe", Position = "Manager", Salary = 100, Email = "jdoe@domain.com" },
                 new Employee { Name = "Jane Smith", Position = "Developer", Salary = 50, Email = "jsmith@domain.com" },
                 new Employee { Name = "Emily Johnson", Position = "Designer", Salary = 10, Email = "ejohnson@domain.com" }
             };
         public List<Employee> GetEmployees()        
         {
-            return Employees;
+            return Employees; //Devuelve la lista de empleados almacenada en memoria.
+        }
+        public List<Employee> SearchEmployees(string sOption, string searchInput)
+        {
+            List<Employee> searchResults = new List<Employee>();
+            return sOption switch
+            {
+                "Name" => Employees.Where(e => e.Name.Contains(searchInput, StringComparison.OrdinalIgnoreCase)).ToList(),
+                "Position" => Employees.Where(e => e.Position.Contains(searchInput, StringComparison.OrdinalIgnoreCase)).ToList(),
+                "Email" => Employees.Where(e => e.Email.Contains(searchInput, StringComparison.OrdinalIgnoreCase)).ToList(),
+                _ => new List<Employee>()
+            };
         }
         public void DeleteEmployee(Employee employee)
         {
-            Employees.Remove(employee);
-           
+            Employees.Remove(employee);      
         }
         public void AddEmployee(Employee empleado)
         {

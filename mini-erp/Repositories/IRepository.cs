@@ -12,5 +12,6 @@ namespace mini_erp.Repositories
         List<Employee> GetEmployees();
         void DeleteEmployee(Employee emp);
         void AddEmployee(Employee emp);
+        List<Employee> SearchEmployees(string sOption, string searchInput);
     }
 }
