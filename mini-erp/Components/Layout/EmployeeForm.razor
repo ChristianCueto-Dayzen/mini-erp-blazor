@@ -16,29 +16,29 @@
     <br />
     <div class="form-control border-3" style="background-color: whitesmoke">
         <p>Enter the new employee information: </p>
-        <EditForm Model="empleado" OnValidSubmit="Add" style="flex-direction:column-reverse">
+        <EditForm Model="employee" OnValidSubmit="Add" style="flex-direction:column-reverse">
             <DataAnnotationsValidator />
             <div class="row">
                 <div class="col-md-6">
                     <label> Name: </label>
-                    <InputText class="form-control" @bind-Value="@empleado.Name" />
-                    <ValidationMessage For="@(() => empleado.Name)" />
+                    <InputText class="form-control" @bind-Value="@employee.Name" />
+                    <ValidationMessage For="@(() => employee.Name)" />
                 </div>
                 <div class="col-md-6">
                     <label> Position: </label>
-                    <InputText class="form-control" @bind-Value="@empleado.Position"/>
-                    <ValidationMessage For="@(() => empleado.Position)" />
+                    <InputText class="form-control" @bind-Value="@employee.Position"/>
+                    <ValidationMessage For="@(() => employee.Position)" />
                     
                 </div>
                 <div class="col-md-6">
                     <label> Email: </label>
-                    <InputText class="form-control" @bind-Value="@empleado.Email" />
-                    <ValidationMessage For="@(() => empleado.Email)" />
+                    <InputText class="form-control" @bind-Value="@employee.Email" />
+                    <ValidationMessage For="@(() => employee.Email)" />
                 </div>
                 <div class="col-md-6">
                     <label> Salary: </label>
-                    <InputNumber class="form-control" @bind-Value="@empleado.Salary" />
-                    <ValidationMessage For="@(() => empleado.Salary)" />
+                    <InputNumber class="form-control" @bind-Value="@employee.Salary" />
+                    <ValidationMessage For="@(() => employee.Salary)" />
                 </div>
             </div>
             <br />
@@ -69,12 +69,12 @@
     {
         isLoading = true;
         await Task.Delay(2000);
-        await OnAdd.InvokeAsync(empleado);
+        await OnAdd.InvokeAsync(employee);
         isLoading = false;
     }
 
     [Parameter]
-    public Employee empleado { get; set; } = null!;
+    public Employee employee { get; set; } = null!;
 
     [Parameter]
     public EventCallback<Employee> OnAdd { get; set; }

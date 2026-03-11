@@ -1,16 +1,16 @@
 ﻿<!-- Employee Card: Muestra en forma de tabla los datos obtenidos en la lista de empleados
     proporcionada por el padre. Incluye un input para filtrar/buscar empleados.
 -->
-@inject IRepository repository
-
-<EmployeeForm empleado="employee" OnAdd="AddEmployeeAsync" />
-
 <br />
 <div class="row justify-content-end">
-    <input class="form-control" style="max-width: 300px; margin:0 4px" @bind="searchInput" @bind:event="oninput" @bind:after="Find" placeholder="Search:" />
+    <input class="form-control" style="max-width: 300px; margin:0 4px"
+           @bind="input"
+           @bind:event="oninput"
+           @bind:after="Find"
+           placeholder="Search:" />
     @*<input class="form-control" style="max-width: 300px; margin:0 4px" @bind="searchInput" placeholder="Search:" />*@
     <InputSelect class="form-select" style="max-width: 150px; margin:0 4px"
-        @bind-Value="searchOption" @bind-Value:after="Find">
+                 @bind-Value="option" @bind-Value:after="Find">
 
         <option class="text-opacity-25" value="">--Search by--</option>
         <option value="Name">Name</option>
@@ -45,7 +45,7 @@
                 <td colspan="5">Loading employees...</td>
             </tr>
         }
-        
+
         else if (employees.Count == 0)
         {
             <tr>
@@ -56,7 +56,7 @@
         {
             @foreach (var employee in employees)
             {
-                <tr>
+                <tr @key="employee">
                     <td>@employee.Name</td>
                     <td>@employee.Position</td>
                     <td>@employee.Email</td>
@@ -66,7 +66,7 @@
                         {
                             <button class="btn btn-danger btn-sm"
                                     disabled="@IsLoading"
-                                    @onclick="() => DeleteEmployeeAsync(employee)">
+                                    @onclick="() => Delete(employee)">
                                 Delete
                             </button>
                         }
@@ -76,7 +76,6 @@
                         }
                     </td>
                 </tr>
-
             }
         }
 
@@ -84,59 +83,43 @@
 </table>
 
 @code {
-    string searchOption = string.Empty;
+
     bool ShowDeleteButton = false;
-    bool IsLoading = false;
-    bool IsShowingFilteredList = false;
-    private Employee employee { get; set; } = new();
-    string searchInput = string.Empty;
+    string input = string.Empty;
+    string option = string.Empty;
 
     [Parameter]
     [EditorRequired]
     public List<Employee>? employees { get; set; }
-
-
+    [Parameter]
+    public EventCallback<EmployeeSearch> OnSearch { get; set; }
+    [Parameter]
+    public EventCallback<Employee> OnDelete { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public bool IsLoading { get; set; }
 
     protected async Task Find()
     {
-        if (!string.IsNullOrEmpty(searchOption) && !string.IsNullOrWhiteSpace(searchInput))
+        if (!string.IsNullOrWhiteSpace(input))
         {
-            employees = repository.SearchEmployees(searchOption,searchInput.Trim());
-            StateHasChanged();
-            IsShowingFilteredList = true;
-        }
-        else if(IsShowingFilteredList)
-        {
-            employees = repository.GetEmployees();
-            IsShowingFilteredList = false;
+            await OnSearch.InvokeAsync(new EmployeeSearch(option ,input.Trim()));
         }
     }
 
     protected async Task Clear()
     {
-        if (!string.IsNullOrWhiteSpace(searchInput))
+        if (!string.IsNullOrWhiteSpace(input))
         {
-            searchInput = "";
-            searchOption = "";
-        }
-        if (IsShowingFilteredList)
-        {
-            await Find();
+            input = "";
+            option = "";
+            await OnSearch.InvokeAsync(new EmployeeSearch("", ""));
+            StateHasChanged();
         }
     }
 
-    protected async Task DeleteEmployeeAsync(Employee employee)
+    protected async Task Delete(Employee employee)
     {
-        IsLoading = true;
-        await Task.Delay(2000);
-        repository.DeleteEmployee(employee);
-        IsLoading = false;
-    }
-
-    private async Task AddEmployeeAsync()
-    {
-        await Task.Delay(2000);
-        repository.AddEmployee(employee);
-        employee = new Employee();
+        await OnDelete.InvokeAsync(employee);
     }
 }

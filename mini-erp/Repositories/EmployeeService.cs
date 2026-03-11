@@ -19,15 +19,15 @@ namespace mini_erp.Repositories
         {
             return Employees; //Devuelve la lista de empleados almacenada en memoria.
         }
-        public List<Employee> SearchEmployees(string sOption, string searchInput)
+        public List<Employee> SearchEmployees(EmployeeSearch emp)
         {
             List<Employee> searchResults = new List<Employee>();
-            return sOption switch
+            return emp.getOption() switch
             {
-                "Name" => Employees.Where(e => e.Name.Contains(searchInput, StringComparison.OrdinalIgnoreCase)).ToList(),
-                "Position" => Employees.Where(e => e.Position.Contains(searchInput, StringComparison.OrdinalIgnoreCase)).ToList(),
-                "Email" => Employees.Where(e => e.Email.Contains(searchInput, StringComparison.OrdinalIgnoreCase)).ToList(),
-                _ => new List<Employee>()
+                "Name" => Employees.Where(e => e.Name.Contains(emp.getInput(), StringComparison.OrdinalIgnoreCase)).ToList(),
+                "Position" => Employees.Where(e => e.Position.Contains(emp.getInput(), StringComparison.OrdinalIgnoreCase)).ToList(),
+                "Email" => Employees.Where(e => e.Email.Contains(emp.getInput(), StringComparison.OrdinalIgnoreCase)).ToList(),
+                _ => Employees
             };
         }
         public void DeleteEmployee(Employee employee)

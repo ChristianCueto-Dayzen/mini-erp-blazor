@@ -1,7 +1,8 @@
-﻿<!-- Página de Empleados: Solicita los componentes necesarios para mostrárselos al usuario-->
+﻿<!-- Página de Empleados: Solicita los componentes necesarios
+    
+-->
 @page "/employees"
 @inject IRepository repository
-@attribute [StreamRendering]
 @rendermode InteractiveServer
 
 <PageTitle>Employees</PageTitle>
@@ -9,20 +10,53 @@
 <div>
     <h2 class="text-center text-info-emphasis text-primary text-start">Employees</h2>
     <p class="text-body">This is a page for employees management</p>
-    
-    <EmployeeCard employees="employees"/>
+    <EmployeeForm employee="employee"
+        OnAdd="AddEmployee" />
+    <EmployeeCard employees="employees"
+        IsLoading="IsLoading"
+        OnDelete="DeleteEmployee"
+        OnSearch="SearchEmployees"/>
 </div>
 
 @code {
     private List<Employee>? employees { get; set; }
+    private Employee employee = new Employee();
+    bool IsLoading = false;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstrender)
     {
-        if (firstRender)
+        if (firstrender)
         {
+            IsLoading = true;
             await Task.Delay(2000);
             employees = repository.GetEmployees();
+            IsLoading = false;
             StateHasChanged();
         }
+    }
+
+    protected async Task DeleteEmployee(Employee employee)
+    {
+        IsLoading = true;
+        await Task.Delay(2000);
+        repository.DeleteEmployee(employee);
+        employees = repository.GetEmployees();
+        IsLoading = false;
+
+    }
+
+    private async Task AddEmployee()
+    {
+        IsLoading = true;
+        await Task.Delay(2000);
+        repository.AddEmployee(employee);
+        employees = repository.GetEmployees();
+        employee = new Employee();
+        IsLoading = false;
+    }
+    protected async Task SearchEmployees(EmployeeSearch emp)
+    {
+        await Task.Delay(800);
+        employees = repository.SearchEmployees(emp);
     }
 }
